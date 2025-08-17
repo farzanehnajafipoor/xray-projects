@@ -1,0 +1,55 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: xray
+    volumes:
+      - mongo-data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"      
+      - "15672:15672"    
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  consumer:
+    build:
+      context: ./consumer-app
+      dockerfile: Dockerfile
+    container_name: consumer-app
+    restart: always
+    depends_on:
+      - mongo
+      - rabbitmq
+    environment:
+      MONGO_URI: mongodb://mongo:27017/xray
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_QUEUE: xray.queue
+    ports:
+      - "3000:3000" 
+
+  producer:
+    build:
+      context: ./producer-app
+      dockerfile: Dockerfile
+    container_name: producer-app
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_QUEUE: xray.queue
+    ports:
+      - "3001:3001"
+
+volumes:
+  mongo-data:
