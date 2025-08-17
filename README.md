@@ -2,7 +2,7 @@
 
 This repository contains two NestJS microservices communicating via RabbitMQ, and using MongoDB for storage:
 
-- **Producer App**: Sends XRay messages to the RabbitMQ queue.
+- **Producer App**: Sends a XRay message to the RabbitMQ queue every 30 minute.
 - **Consumer App**: Consumes messages from the queue and stores them in MongoDB.
 
 Both apps can be run via Docker Compose with a single command.
@@ -51,6 +51,7 @@ Example for both:
 ```bash
 # Producer .env
 RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+RABBITMQ_QUEUE=xray-queue
 
 # Consumer .env
 RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
@@ -109,12 +110,12 @@ DELETE /signals/:id – Delete a signal.
 .
 ├── consumer-app/
 │   ├── src/
-│   ├── dist/        # Build output
+│   ├── dist/       
 │   ├── .env
 │   └── Dockerfile
 ├── producer-app/
 │   ├── src/
-│   ├── dist/        # Build output
+│   ├── dist/        
 │   ├── .env
 │   └── Dockerfile
 ├── docker-compose.yml
