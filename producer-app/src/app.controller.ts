@@ -12,8 +12,8 @@ export class AppController {
     return { message: 'Sample x-ray data sent' };
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  async sendXrayAutomatically() {
+  @Cron(CronExpression.EVERY_30_MINUTES)
+  sendXrayAutomatically() {
     this.appService.sendSampleData();
     return { message: 'Sample x-ray data sent automatically' };
   }
